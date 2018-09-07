@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Git," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1.1 关于版本控制​    版本控制是一种记录一个或者若干个文件内容变化，以变将来查阅特定版本修订情况的系统。 1.2 集中式VS分布式​    关于版本控制系统，简单的可以分为两类，即集中式与分布式系统。 1.2.1 集中式版本控制系统​    集中化版本控制系统，(Centralized Version Control Systems，简称 CVCS),诸如CVS、Subversion、以及">
+<meta name="keywords" content="Git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git版本控制">
+<meta property="og:url" content="http://yoursite.com/2018/08/12/Git版本控制/index.html">
+<meta property="og:site_name" content="Pwl&#39;Blog">
+<meta property="og:description" content="1.1 关于版本控制​    版本控制是一种记录一个或者若干个文件内容变化，以变将来查阅特定版本修订情况的系统。 1.2 集中式VS分布式​    关于版本控制系统，简单的可以分为两类，即集中式与分布式系统。 1.2.1 集中式版本控制系统​    集中化版本控制系统，(Centralized Version Control Systems，简称 CVCS),诸如CVS、Subversion、以及">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/08/12/Git版本控制/centralized.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/12/Git版本控制/distributed.png">
+<meta property="og:updated_time" content="2018-08-17T08:28:24.750Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git版本控制">
+<meta name="twitter:description" content="1.1 关于版本控制​    版本控制是一种记录一个或者若干个文件内容变化，以变将来查阅特定版本修订情况的系统。 1.2 集中式VS分布式​    关于版本控制系统，简单的可以分为两类，即集中式与分布式系统。 1.2.1 集中式版本控制系统​    集中化版本控制系统，(Centralized Version Control Systems，简称 CVCS),诸如CVS、Subversion、以及">
+<meta name="twitter:image" content="http://yoursite.com/2018/08/12/Git版本控制/centralized.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/12/Git版本控制/"/>
+
+
+
+
+
+  <title>Git版本控制 | Pwl'Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pwl'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/12/Git版本控制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Cz Pwl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pwl'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Git版本控制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-12T16:44:07+08:00">
+                2018-08-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-1-关于版本控制"><a href="#1-1-关于版本控制" class="headerlink" title="1.1 关于版本控制"></a>1.1 关于版本控制</h2><p>​    版本控制是一种记录一个或者若干个文件内容变化，以变将来查阅特定版本修订情况的系统。</p>
+<h2 id="1-2-集中式VS分布式"><a href="#1-2-集中式VS分布式" class="headerlink" title="1.2 集中式VS分布式"></a>1.2 集中式VS分布式</h2><p>​    关于版本控制系统，简单的可以分为两类，即集中式与分布式系统。</p>
+<h3 id="1-2-1-集中式版本控制系统"><a href="#1-2-1-集中式版本控制系统" class="headerlink" title="1.2.1 集中式版本控制系统"></a>1.2.1 集中式版本控制系统</h3><p>​    集中化版本控制系统，(<code>Centralized Version Control Systems</code>，简称 <code>CVCS</code>),诸如<code>CVS</code>、<code>Subversion</code>、以及<code>Perforce</code>等，这种集中式的版本控制系统都有一个共同点，即都有一个单一的集中管理的服务器，保存所有文件的修订版本，而协同工作的人员都通过客户端连接到这台服务器，取出最新的文件或者提交更新，工作模式如下图所示：</p>
+<p>​    <img src="/2018/08/12/Git版本控制/centralized.png" alt="集中式版本控制系统工作模式"></p>
+<p>​    这种集中式的工作模式带来的好处就是相比较于之前老式的本地<code>VCS</code>来说,现在每个人都可以在一定程度上看到项目的其他人正在做些什么,而管理员也可以轻松的掌控每个开发者的权限,并且管理一个<code>CVCS</code>要远比在每个客户端上维护本地数据库来得轻松简单。</p>
+<p>​    事分两面，有好有坏。这种集中式存在一个显而易见的缺点，即中央服务器的单点故障，如果宕机一小时，那么在这一小时内，谁都无法提交更新，也就无法协同工作。更不幸的是，如果中心数据库所在的磁盘发生损坏，又没有做恰当备份，毫无疑问，你将丢失所有的数据(包括项目的整个变更历史)，只留下人们各自机器上保留的单独快照。</p>
+<h3 id="1-2-2-分布式版本控制系统"><a href="#1-2-2-分布式版本控制系统" class="headerlink" title="1.2.2 分布式版本控制系统"></a>1.2.2 分布式版本控制系统</h3><p>​    分布式版本控制系统，(<code>Distributed Version Control System</code>，简称 <code>DVCS</code>,此类的系统有<code>Git</code>、<code>Mercurial</code>、<code>Bazaar</code>、以及<code>Darcs</code>等。分布式版本控制系统的特点就是客户端并不止提取最新版本的文件快照，而是将代码仓库完整的镜像下来，这么一来，任何一处协同工作用的服务器发生故障，事后都可以用任何一个镜像出来的本地仓库进行恢复，因为每一次的克隆操作，实际上都是一次对代码仓库的完整备份。分布式版本控制系统的工作模式如下图所示：</p>
+<p><img src="/2018/08/12/Git版本控制/distributed.png" alt="分布式版本控制系统工作模式"></p>
+<h2 id="1-3-Git与SVN的对比"><a href="#1-3-Git与SVN的对比" class="headerlink" title="1.3 Git与SVN的对比"></a>1.3 Git与SVN的对比</h2><p>​    在这里总结一下我个人对Git与SVN等版本控制系统的一些差异，因为之前用过SVN也只是简单的使用，也并没有深入的去了解，毕竟只是工具嘛，更多的是为了面试的时候，自己能够答出一些点。</p>
+<p>​    个人理解，Git与SVN的区别<code>主要</code>有如下几点：</p>
+<p>​        第一点，体现在对数据的管理上，Git在对待数据上像是一个快照流，每次你提交更新，或者在Git项目中保存项目项目状态时，Git主要是对当前的全部文件制作一个快照，并保存这个快照的索引，以便于你可以随时恢复到这个状态。为了高效处理，如果Git管理的文件没有发生改变，那么Git将不会重新存储该文件，而是保留一个链接指向之前存储的文件。而像SVN,CVS,Perforce等则是以文件变更列表信息存储信息，它们保存的信息看作是一组基本文件和每个文件随时间累积的差异。</p>
+<p>​        第二点，Git几乎所有操作都在本地上进行，Git拥有一个本地仓库，这个本地仓库不仅包含我们所管理的文件信息，还维护着对Git操作的历史记录，设想一下哪天你处于一个脱网的环境下，你仍然可以自由顺畅的使用Git，等到有网的时，再将本地的操作同步到远程服务器，可见多方便。而SVN的操作则需要依赖远程服务器，在脱网的环境下，你就没办法进行代码的提交，更新等等。在这里补充一下，Git也是有远程仓库的，只不过Git的远程仓库，更多的为了方便不同开发人员进行协同工作的，这也就是为什么Git的远程仓库哪天宕机了，我们可以随便拿一台电脑上的本地Git仓库进行数据回复，这个恢复操作，不仅是指源文件，更重要的是历史纪录！！！理解这一点，也更好的理解了集中式与分布式的一些区别。</p>
+<p>​    以上，皆为个人思考，如有不对，欢迎指正☞☞QQ：<code>913709071</code></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Git/" rel="tag"># Git</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/06/初探Redis/" rel="prev" title="初探Redis">
+                初探Redis <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Cz Pwl" />
+            
+              <p class="site-author-name" itemprop="name">Cz Pwl</p>
+              <p class="site-description motion-element" itemprop="description">You never know what you can do till you try.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-关于版本控制"><span class="nav-number">1.</span> <span class="nav-text">1.1 关于版本控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-集中式VS分布式"><span class="nav-number">2.</span> <span class="nav-text">1.2 集中式VS分布式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-集中式版本控制系统"><span class="nav-number">2.1.</span> <span class="nav-text">1.2.1 集中式版本控制系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-2-分布式版本控制系统"><span class="nav-number">2.2.</span> <span class="nav-text">1.2.2 分布式版本控制系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-Git与SVN的对比"><span class="nav-number">3.</span> <span class="nav-text">1.3 Git与SVN的对比</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cz Pwl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>

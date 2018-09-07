@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Redis," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="​    Redis，Remote Dictionary Service，即「远程字典服务」,是一款可基于内存也可持久化的日志型、Key-Value高性能Nosql数据库。Redis 以其超高的性能、丰富的数据类型、完美的文档、简洁易懂的源码和丰富的客户端库支持成为当前互联网技术领域使用最为广泛的存储中间件。 超高的性能​    正常情况下，Redis执行命令的速度非常快，官方给出的数字是读写性能">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初探Redis">
+<meta property="og:url" content="http://yoursite.com/2018/09/06/初探Redis/index.html">
+<meta property="og:site_name" content="Pwl&#39;Blog">
+<meta property="og:description" content="​    Redis，Remote Dictionary Service，即「远程字典服务」,是一款可基于内存也可持久化的日志型、Key-Value高性能Nosql数据库。Redis 以其超高的性能、丰富的数据类型、完美的文档、简洁易懂的源码和丰富的客户端库支持成为当前互联网技术领域使用最为广泛的存储中间件。 超高的性能​    正常情况下，Redis执行命令的速度非常快，官方给出的数字是读写性能">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-09-07T03:52:59.571Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初探Redis">
+<meta name="twitter:description" content="​    Redis，Remote Dictionary Service，即「远程字典服务」,是一款可基于内存也可持久化的日志型、Key-Value高性能Nosql数据库。Redis 以其超高的性能、丰富的数据类型、完美的文档、简洁易懂的源码和丰富的客户端库支持成为当前互联网技术领域使用最为广泛的存储中间件。 超高的性能​    正常情况下，Redis执行命令的速度非常快，官方给出的数字是读写性能">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/06/初探Redis/"/>
+
+
+
+
+
+  <title>初探Redis | Pwl'Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Pwl'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/06/初探Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Cz Pwl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pwl'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">初探Redis</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-06T14:14:08+08:00">
+                2018-09-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>​    Redis，<code>Remote Dictionary Service</code>，即「远程字典服务」,是一款可基于内存也可持久化的日志型、Key-Value高性能Nosql数据库。Redis 以其超高的性能、丰富的数据类型、完美的文档、简洁易懂的源码和丰富的客户端库支持成为当前互联网技术领域使用最为广泛的存储中间件。</p>
+<h2 id="超高的性能"><a href="#超高的性能" class="headerlink" title="超高的性能"></a>超高的性能</h2><p>​    正常情况下，Redis执行命令的速度非常快，官方给出的数字是读写性能高达10万/秒，当然这也取决于机器的性能，网络带宽等，那么Redis为什么这么快呢？归结到底主要有如下几点：</p>
+<pre><code>1. Redis所有的数据都是存放在内存中，避免磁盘IO的消耗，这也是Redis具有超高性能的重要原因；
+2. Redis采用了单线程架构，避免了上下文切换的时间和性能消耗；
+3. 使用多路 I/O 复用模型；
+</code></pre><h2 id="多数据类型"><a href="#多数据类型" class="headerlink" title="多数据类型"></a>多数据类型</h2><p>​    Redis主要提供了五种数据结构，分别是string（字符串）、list（列表）、hash（哈希）、set（集合）、zset（有序集合），同时在字符串的基础上演变出了bitmaps（位图）和HyperLogLog这两种神奇的数据结构，另外Redis在3.2版本也引入了GEO（地理信息地位）的数据结构。</p>
+<h2 id="丰富的功能"><a href="#丰富的功能" class="headerlink" title="丰富的功能"></a>丰富的功能</h2><p>​    Redis还为我们提供了许多额外的功能，主要有如下几点：</p>
+<pre><code>1. 提供了键过期的功能，可以用于实现缓存；
+2. 提供了发布/订阅功能，可用于实现消息系统；
+3. 支持Lua脚本，可以自定命令；
+4. 提供了简单的事务功能，能在一定程度上保证了事务的特性；
+5. 提供了流水线（Pipeline）功能，这样客户端可以将一批命令一次性传到服务端，减少了网络开销；
+</code></pre><h2 id="支持持久化"><a href="#支持持久化" class="headerlink" title="支持持久化"></a>支持持久化</h2><p>​    通常来说，数据存放在内存中是有一定的风险的，因为这意味着一旦你的机器发生carsh，用户存放在内存中的数据就丢失，这对用户来说，显然是不可容忍的，好在Redis已有了较为完善的持久化机制，为其高可用性提供了保障。</p>
+<p>​    Redis提供了RDB与AOF两种持久化方案，可以将内存中的数据保存到硬盘中。下面就简单的介绍这两种持久化策略。</p>
+<ol>
+<li><p><strong>RDB持久化</strong></p>
+<p>RDB持久化是把当前进程数据生成快照保存到硬盘的过程，触发RDB持久化分为手动触发和主动触发。</p>
+</li>
+<li><p><strong>AOF持久化</strong></p>
+<p>AOF持久化是以独立日志命令的方式记录每次Redis写入命令，重启时在重新执行AOF文件中的命令达到恢复数据的目的。AOF持久化主要是解决了数据持久化的实时性，目前已经成为Redis持久化的主流方式。</p>
+</li>
+</ol>
+<h2 id="主从复制、高可用和分布式"><a href="#主从复制、高可用和分布式" class="headerlink" title="主从复制、高可用和分布式"></a>主从复制、高可用和分布式</h2><p>​    Redis提供了主从复制功能，实现了多个相同数据的Redis副本，Redis主从复制也是Redis高可用和分布式的基础。</p>
+<p>​    Redis在2.8版本推出了Redis Sentinel（Redis哨兵），它能够保障Redis节点的故障发现和故障自动转移，也是Redis高可用的实现方案。</p>
+<p>​    Redis在3.0版本正式提供了分布式实现Redis Cluster，它是Redis真正的分布式实现，提供了高可用、读写、和容量的扩展性。</p>
+<h2 id="Redis常见使用场景"><a href="#Redis常见使用场景" class="headerlink" title="Redis常见使用场景"></a>Redis常见使用场景</h2><p>​    在学习一门新的技术时，我们不仅要掌握其实现原理，更要了解所学的技术到底可以用来做什么。下面主要介绍了Redis在实际应用中的几种使用场景。</p>
+<ol>
+<li><p><strong>使用Redis作为缓存中间件</strong></p>
+<p>​    Redis提供了键过期的功能，所以常被用于缓存。</p>
+<p>​    在互联网web应用中，合理的使用缓存可以有效的加速应用的响应速度，降低后端的负载压力。这里要注意合理这两字，因为缓存也不是万金油，使用起来也是一门高深学问，这里包含了冷热数据，数据一致性，缓存穿透，雪崩等等问题，此处不做深入讨论。</p>
+</li>
+</ol>
+<ol start="2">
+<li><p><strong>使用Redis异步消息队列</strong></p>
+<p>​    Redis提供的list（列表）数据结构，常用于做异步消息队列。使用<code>rpush/lpush</code>操作入队列，使用<code>lpop 和 rpop</code>来出队列。还有一种是使用<code>blpop</code>和<code>brpop</code>这两个阻塞命令来做阻塞队列的实现方案，但要注意的是这种方案实现的是1:1的队列；</p>
+<p>​    Redis也提供了pub/sub主题订阅者模式，为我们实现了1：N的消息队列。</p>
+</li>
+<li><p><strong>使用Redis打造分布式锁</strong></p>
+<p>​    Redis提供了<code>set key value [ex seconds][px milliseconds] [nx|xx]</code>指令，常用于做分布式锁的实现方案。<code>set key value [ex seconds] [nx]</code>标识只有key不存在的时候才会执行插入，且这个key具有一定的过期时间。</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/12/Git版本控制/" rel="next" title="Git版本控制">
+                <i class="fa fa-chevron-left"></i> Git版本控制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/07/Redis数据结构之String/" rel="prev" title="Redis数据结构之String">
+                Redis数据结构之String <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Cz Pwl" />
+            
+              <p class="site-author-name" itemprop="name">Cz Pwl</p>
+              <p class="site-description motion-element" itemprop="description">You never know what you can do till you try.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#超高的性能"><span class="nav-number">1.</span> <span class="nav-text">超高的性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多数据类型"><span class="nav-number">2.</span> <span class="nav-text">多数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#丰富的功能"><span class="nav-number">3.</span> <span class="nav-text">丰富的功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#支持持久化"><span class="nav-number">4.</span> <span class="nav-text">支持持久化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主从复制、高可用和分布式"><span class="nav-number">5.</span> <span class="nav-text">主从复制、高可用和分布式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis常见使用场景"><span class="nav-number">6.</span> <span class="nav-text">Redis常见使用场景</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cz Pwl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
