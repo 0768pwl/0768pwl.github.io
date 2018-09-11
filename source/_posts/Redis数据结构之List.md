@@ -9,7 +9,7 @@ categories: Redis
 
 ## 常用命令
 
-#### 1. 添加元素
+###  添加元素
 
 ```
 //从右边插入元素
@@ -25,7 +25,7 @@ categories: Redis
 举例： linsert names before mike nanxi；//从列表中找到value为mike的值，在前面插入value为nanxi的元素
 ```
 
-#### 2. 查找元素
+### 查找元素
 
 ```
 //获取指定范围内的元素列表
@@ -43,7 +43,7 @@ categories: Redis
 指令： llen key
 举例： llen names；//返回key为names的列表长度为4
 ```
-#### 3. 删除元素
+### 删除元素
 
 ```
 //从列表左侧删除元素
@@ -66,14 +66,14 @@ lrem命令会从列表中找到等于value的元素进行删除，根据count的
 指令： ltrim key start end
 举例： ltrim names 1 3；//保留names列表的第二到第四个元素
 ```
-#### 4. 修改元素
+### 修改元素
 
 ```
 //修改指定索引下标的元素
 指令： lset key index newValue
 举例： lset names 0 houyi；//将names列表的第一个元素修改为houyi，下标规则同上
 ```
-#### 5. 阻塞式命令
+###  阻塞式命令
 
 ```
 Redis为list列表类型提供了brpop与blpop两个阻塞式命令，blpop和brpop是lpop和rpop的阻塞版本，它们除了弹出方向不同，使用方法基本相同。
@@ -97,7 +97,7 @@ Redis为list列表类型提供了brpop与blpop两个阻塞式命令，blpop和br
 ​	3.Redis3.2版本提供了quicklist内部编码，简单地说它是以一个ziplist为节点的linkedlist，它结合了ziplist和linkedlist两者的优势，为列表类型提供了一种更为优秀的内部编码实现；
 ## 使用场景
 
-#### 1.消息队列
+### 消息队列
 
 ​	Redis提供的lpush+brpop或rpush+blpop可以实现延迟队列。
 
